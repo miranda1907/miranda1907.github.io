@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For you, with love</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #050810;
+      --deep:   #0a0f1e;
+      --navy:   #0d1635;
+      --gold:   #c8a84b;
+      --glow:   #e8c96a;
+      --silver: #a8b4cc;
+      --white:  #f0f4ff;
+      --warm:   #1a1228;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+    }
+
+    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ── Header ── */
+    .header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+    }
+
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 9vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+    }
+
+    .header h1 span {
+      color: var(--gold);
+    }
+
+    .header .sub {
+      margin-top: 1.2rem;
+      color: var(--silver);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 520px;
+      margin: 0 auto 3.5rem;
+      padding: 0 2rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+    .divider-star { color: var(--gold); font-size: 0.9rem; }
+
+    /* ── Cards grid ── */
+    .cards {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .card {
+      background: rgba(13,22,53,0.6);
+      border: 1px solid rgba(200,168,75,0.18);
+      border-radius: 4px;
+      padding: 2rem 1.8rem;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease, border-color 0.3s;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card:hover {
+      border-color: rgba(200,168,75,0.45);
+    }
+
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--silver);
+      line-height: 1.75;
+    }
+
+    /* ── Big quote ── */
+    .quote-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 4.5rem auto 0;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    blockquote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.25rem, 3.5vw, 1.65rem);
+      line-height: 1.65;
+      color: var(--white);
+      opacity: 0;
+      transition: opacity 1s ease 0.3s;
+    }
+
+    blockquote.visible { opacity: 1; }
+
+    blockquote::before {
+      content: '"';
+      display: block;
+      font-size: 5rem;
+      line-height: 0.4;
+      color: var(--gold);
+      opacity: 0.5;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Bottom CTA ── */
+    .bottom {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 4rem 2rem 5rem;
+    }
+
+    .hint-line {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--silver);
+      opacity: 0.6;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 1.1rem 2.6rem;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
+      border: none;
+    }
+
+    .cta:hover {
+      background: var(--glow);
+      box-shadow: 0 0 35px rgba(200,168,75,0.45);
+      transform: translateY(-2px);
+    }
+
+    .cta .arrow { transition: transform 0.3s; }
+    .cta:hover .arrow { transform: translateX(5px); }
+
+    /* ── Progress ── */
+    .progress {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(200,168,75,0.3);
+    }
+    .dot.active { background: var(--gold); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, blockquote { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="header">
+  <p class="eyebrow">A birthday tribute</p>
+  <h1>Here's to<br/><span>you,</span> builder.</h1>
+  <p class="sub">The one who turns ideas into reality — and makes mine feel possible too.</p>
+</div>
+
+<div class="divider"><span class="divider-star">✦</span></div>
+
+<div class="cards">
+
+  <div class="card">
+    <span class="card-icon">🧠</span>
+    <h3>For the mind that never stops</h3>
+    <p>You see problems as puzzles, bugs as mysteries, and every blank file as a world that hasn't been built yet. That relentless curiosity is one of the things I love most about you.</p>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🛠️</span>
+    <h3>For the hands that create</h3>
+    <p>You build things that exist only because you decided they should. From zero to something real — that kind of quiet power is rare, and I get to watch you do it all the time.</p>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">🌙</span>
+    <h3>For the patience you carry</h3>
+    <p>You debug at midnight without losing your calm. You explain things twice without losing your kindness. That steadiness is my safe place.</p>
+  </div>
+
+  <div class="card">
+    <span class="card-icon">✨</span>
+    <h3>For everything you are</h3>
+    <p>Smart. Warm. Funny in the quietest way. You're the kind of person who makes the room better just by being in it — and I'm the lucky one who gets to call you mine.</p>
+  </div>
+
+</div>
+
+<div class="quote-wrap">
+  <blockquote id="bq">
+    The world is made of code and chaos,<br/>
+    and you've made your own little corner of it<br/>
+    beautiful, deliberate, and yours.<br/>
+    Happy birthday.
+  </blockquote>
+</div>
+
+<div class="bottom">
+  <p class="hint-line">One more stop &nbsp;·&nbsp; the best part is next</p>
+  <a class="cta" href="page3.html">
+    Keep going <span class="arrow">→</span>
+  </a>
+</div>
+
+<div class="progress">
+  <div class="dot"></div>
+  <div class="dot active"></div>
+  <div class="dot"></div>
+</div>
+
+<script>
+  // Starfield
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  function seed() {
+    stars = Array.from({ length: 180 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      a: Math.random(), da: (Math.random() * 0.003 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+    }));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      s.a = Math.max(0.08, Math.min(1, s.a + s.da));
+      if (s.a <= 0.08 || s.a >= 1) s.da *= -1;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232,201,106,${s.a * 0.75})`; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  resize(); seed(); draw();
+  window.addEventListener('resize', () => { resize(); seed(); });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 120);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.card').forEach(c => observer.observe(c));
+
+  const bq = document.getElementById('bq');
+  const bqObs = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) bq.classList.add('visible');
+  }, { threshold: 0.4 });
+  bqObs.observe(bq);
+</script>
+</body>
+</html>

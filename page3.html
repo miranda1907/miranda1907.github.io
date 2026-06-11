@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The final gift 🎁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #050810;
+      --navy:   #0d1635;
+      --gold:   #c8a84b;
+      --glow:   #e8c96a;
+      --silver: #a8b4cc;
+      --white:  #f0f4ff;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ── Confetti canvas ── */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 4.5rem 2rem 5rem;
+      text-align: center;
+    }
+
+    /* ── Firework graphic ── */
+    .burst {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 2rem;
+      animation: spin 20s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Typography ── */
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 9vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.5s forwards;
+    }
+
+    h1 .gold { color: var(--gold); }
+
+    .sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--silver);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.8s forwards;
+    }
+
+    /* ── Video wrapper ── */
+    .video-outer {
+      opacity: 0;
+      animation: fadeUp 1s ease 1.2s forwards;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .video-frame {
+      position: relative;
+      background: var(--navy);
+      border: 1.5px solid rgba(200,168,75,0.35);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(200,168,75,0.12), 0 0 120px rgba(200,168,75,0.05);
+    }
+
+    /* Placeholder shown when no video src is set */
+    .video-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 4.5rem 2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .video-placeholder:hover { background: rgba(200,168,75,0.04); }
+
+    .play-ring {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .play-ring::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.25);
+      animation: ringPulse 2s ease infinite;
+    }
+    .play-triangle {
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 12px 0 12px 22px;
+      border-color: transparent transparent transparent var(--gold);
+      margin-left: 4px;
+    }
+
+    .placeholder-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+    .placeholder-note {
+      font-size: 0.75rem;
+      color: rgba(168,180,204,0.5);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    /* Actual video element */
+    .video-frame video {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .video-frame video.hidden { display: none; }
+
+    /* Gold bar under video */
+    .video-bar {
+      height: 3px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0.6;
+    }
+
+    /* ── Bottom note ── */
+    .love-note {
+      margin-top: 3.5rem;
+      max-width: 520px;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--silver);
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 2s forwards;
+    }
+
+    .love-note strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .signature {
+      margin-top: 2.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 2.4s forwards;
+    }
+
+    /* ── Progress ── */
+    .progress {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(200,168,75,0.3); }
+    .dot.active { background: var(--gold); }
+
+    /* ── Keyframes ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes ringPulse {
+      0%   { transform: scale(1);   opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::after { animation: none !important; opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="page">
+
+  <!-- Burst SVG -->
+  <svg class="burst" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="6" fill="#e8c96a"/>
+    <circle cx="40" cy="40" r="12" fill="#e8c96a" opacity="0.15"/>
+    <line x1="40" y1="2"  x2="40" y2="18" stroke="#c8a84b" stroke-width="2" stroke-linecap="round"/>
+    <line x1="40" y1="62" x2="40" y2="78" stroke="#c8a84b" stroke-width="2" stroke-linecap="round"/>
+    <line x1="2"  y1="40" x2="18" y2="40" stroke="#c8a84b" stroke-width="2" stroke-linecap="round"/>
+    <line x1="62" y1="40" x2="78" y2="40" stroke="#c8a84b" stroke-width="2" stroke-linecap="round"/>
+    <line x1="12" y1="12" x2="23" y2="23" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="57" y1="57" x2="68" y2="68" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="68" y1="12" x2="57" y2="23" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="23" y1="57" x2="12" y2="68" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+
+  <p class="eyebrow">You made it — final stop</p>
+
+  <h1>Happy<br/><span class="gold">Birthday,</span><br/>my love.</h1>
+
+  <p class="sub">
+    I made this for you. Press play — it's straight from the heart,<br/>
+    no retakes, no editing. Just me, saying what I mean.
+  </p>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       VIDEO SECTION
+       ▸ To add your video: replace VIDEO_FILE_HERE with your file name
+         e.g.  src="birthday-video.mp4"
+         Supported: .mp4, .webm — or swap for a YouTube embed
+  ──────────────────────────────────────────────────────────────── -->
+  <div class="video-outer">
+    <div class="video-frame" id="videoFrame">
+
+      <!-- Placeholder (shown before video is added) -->
+      <div class="video-placeholder" id="placeholder">
+        <div class="play-ring"><div class="play-triangle"></div></div>
+        <p class="placeholder-label">Your video goes here</p>
+        <p class="placeholder-note">
+          Upload your .mp4 to the repo folder and<br/>
+          set <code style="color:var(--gold)">src="your-video.mp4"</code> on the video tag below
+        </p>
+      </div>
+
+      <!-- ↓ Uncomment this block and set the src when your video is ready ↓ -->
+      <!--
+      <video id="bday-video" controls preload="metadata" poster="">
+        <source src="birthday-video.mp4" type="video/mp4" />
+        Your browser doesn't support HTML5 video.
+      </video>
+      -->
+
+    </div>
+    <div class="video-bar"></div>
+  </div>
+
+  <p class="love-note">
+    You are <strong>smarter, kinder, and funnier</strong> than you give yourself credit for.<br/>
+    Watching you grow — as a developer, as a person — is one of my favourite things in the world.<br/>
+    I'm so proud of you, and I'm so glad it's you.
+  </p>
+
+  <p class="signature">— always yours ✦</p>
+
+</div>
+
+<div class="progress">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot active"></div>
+</div>
+
+<script>
+  /* ── Starfield ── */
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  function seed() {
+    stars = Array.from({ length: 160 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.3 + 0.2,
+      a: Math.random(), da: (Math.random() * 0.003 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+    }));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      s.a = Math.max(0.08, Math.min(1, s.a + s.da));
+      if (s.a <= 0.08 || s.a >= 1) s.da *= -1;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232,201,106,${s.a * 0.75})`; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  resize(); seed(); draw();
+  window.addEventListener('resize', () => { resize(); seed(); });
+
+  /* ── Confetti ── */
+  const cc = document.getElementById('confetti-canvas');
+  const cx = cc.getContext('2d');
+  cc.width = window.innerWidth; cc.height = window.innerHeight;
+
+  const COLORS = ['#c8a84b','#e8c96a','#a8b4cc','#f0f4ff','#6a8ecc','#e8a84b'];
+  const pieces = Array.from({ length: 90 }, () => ({
+    x: Math.random() * cc.width,
+    y: Math.random() * cc.height - cc.height,
+    w: Math.random() * 8 + 4,
+    h: Math.random() * 4 + 2,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    rotation: Math.random() * 360,
+    rotSpeed: (Math.random() - 0.5) * 3,
+    speed: Math.random() * 2 + 1,
+    drift: (Math.random() - 0.5) * 1.2,
+    opacity: Math.random() * 0.6 + 0.4,
+  }));
+
+  let confettiActive = true;
+
+  function drawConfetti() {
+    cx.clearRect(0, 0, cc.width, cc.height);
+    let allGone = true;
+    for (const p of pieces) {
+      p.y += p.speed;
+      p.x += p.drift;
+      p.rotation += p.rotSpeed;
+      if (p.y < cc.height + 20) allGone = false;
+      cx.save();
+      cx.globalAlpha = p.opacity;
+      cx.translate(p.x, p.y);
+      cx.rotate((p.rotation * Math.PI) / 180);
+      cx.fillStyle = p.color;
+      cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      cx.restore();
+    }
+    if (confettiActive && !allGone) requestAnimationFrame(drawConfetti);
+    else cx.clearRect(0, 0, cc.width, cc.height);
+  }
+
+  // Start confetti 1.5s after load
+  setTimeout(() => drawConfetti(), 1500);
+
+  // Stop after 6s
+  setTimeout(() => { confettiActive = false; }, 6000);
+
+  window.addEventListener('resize', () => {
+    cc.width = window.innerWidth;
+    cc.height = window.innerHeight;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Something's waiting for you...</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #050810;
+      --deep:   #0a0f1e;
+      --navy:   #0d1635;
+      --gold:   #c8a84b;
+      --glow:   #e8c96a;
+      --silver: #a8b4cc;
+      --white:  #f0f4ff;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── Star canvas ── */
+    #stars { position: fixed; inset: 0; z-index: 0; }
+
+    /* ── Layout ── */
+    .scene {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ── Constellation graphic ── */
+    .constellation {
+      width: 180px;
+      height: 180px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+
+    /* ── Typography ── */
+    .eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.6rem, 8vw, 5.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--white);
+      max-width: 700px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.9s forwards;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--gold);
+      display: inline-block;
+      position: relative;
+    }
+
+    h1 em::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 100%; height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: underline 0.6s ease 2s forwards;
+    }
+
+    .sub {
+      margin-top: 1.4rem;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--silver);
+      max-width: 480px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.2s forwards;
+    }
+
+    /* ── CTA button ── */
+    .cta-wrap {
+      margin-top: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.6s forwards;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+
+    .cta:hover::before { transform: scaleX(1); }
+    .cta:hover { color: var(--ink); box-shadow: 0 0 30px rgba(200,168,75,0.35); }
+
+    .cta .arrow {
+      transition: transform 0.3s;
+      font-size: 1.1rem;
+    }
+    .cta:hover .arrow { transform: translateX(5px); }
+
+    /* ── Hint text ── */
+    .hint {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--silver);
+      opacity: 0;
+      animation: pulse 2s ease 3s infinite;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes underline {
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 0.7; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="scene">
+  <svg class="constellation" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- constellation lines -->
+    <line x1="90" y1="20" x2="130" y2="60"  stroke="#c8a84b" stroke-width="0.8" opacity="0.4"/>
+    <line x1="130" y1="60" x2="150" y2="110" stroke="#c8a84b" stroke-width="0.8" opacity="0.4"/>
+    <line x1="150" y1="110" x2="110" y2="155" stroke="#c8a84b" stroke-width="0.8" opacity="0.4"/>
+    <line x1="90" y1="20" x2="50"  y2="55"   stroke="#c8a84b" stroke-width="0.8" opacity="0.4"/>
+    <line x1="50"  y1="55" x2="30"  y2="105"  stroke="#c8a84b" stroke-width="0.8" opacity="0.4"/>
+    <line x1="30"  y1="105" x2="70" y2="155"  stroke="#c8a84b" stroke-width="0.8" opacity="0.4"/>
+    <line x1="70"  y1="155" x2="110" y2="155" stroke="#c8a84b" stroke-width="0.8" opacity="0.4"/>
+    <line x1="50"  y1="55"  x2="130" y2="60"  stroke="#c8a84b" stroke-width="0.8" opacity="0.25"/>
+    <!-- stars -->
+    <circle cx="90"  cy="20"  r="3.5" fill="#e8c96a"/>
+    <circle cx="130" cy="60"  r="2.5" fill="#c8a84b"/>
+    <circle cx="150" cy="110" r="2"   fill="#c8a84b"/>
+    <circle cx="110" cy="155" r="3"   fill="#e8c96a"/>
+    <circle cx="70"  cy="155" r="2.5" fill="#c8a84b"/>
+    <circle cx="30"  cy="105" r="2"   fill="#c8a84b"/>
+    <circle cx="50"  cy="55"  r="2.5" fill="#e8c96a"/>
+    <!-- center glow -->
+    <circle cx="90" cy="90" r="5" fill="#e8c96a" opacity="0.9"/>
+    <circle cx="90" cy="90" r="12" fill="#e8c96a" opacity="0.08"/>
+  </svg>
+
+  <p class="eyebrow">A message from the universe</p>
+
+  <h1>Hey you.<br/>The stars have been<br/><em>waiting.</em></h1>
+
+  <p class="sub">
+    Someone out there put a little something together for you.<br/>
+    Follow the light — there are three stops on this journey.
+  </p>
+
+  <div class="cta-wrap">
+    <a class="cta" href="page2.html">
+      Begin the journey <span class="arrow">→</span>
+    </a>
+  </div>
+</div>
+
+<p class="hint">page 1 of 3 &nbsp;·&nbsp; keep going</p>
+
+<script>
+  // ── Starfield ──
+  const canvas = document.getElementById('stars');
+  const ctx    = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function seed() {
+    stars = Array.from({ length: 220 }, () => ({
+      x:    Math.random() * W,
+      y:    Math.random() * H,
+      r:    Math.random() * 1.4 + 0.3,
+      a:    Math.random(),
+      da:   (Math.random() * 0.004 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+      dx:   (Math.random() - 0.5) * 0.08,
+      dy:   (Math.random() - 0.5) * 0.08,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      s.x = (s.x + s.dx + W) % W;
+      s.y = (s.y + s.dy + H) % H;
+      s.a = Math.max(0.1, Math.min(1, s.a + s.da));
+      if (s.a <= 0.1 || s.a >= 1) s.da *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232,201,106,${s.a * 0.8})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  seed();
+  draw();
+  window.addEventListener('resize', () => { resize(); seed(); });
+</script>
+</body>
+</html>
