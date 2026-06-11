@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pour Tony — Joyeux Anniversaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --stone:  #0c0d10;
+  --panel:  #13161f;
+  --amber:  #c97d2e;
+  --flame:  #e8a048;
+  --cold:   #4a6080;
+  --mist:   #7a8fa8;
+  --ash:    #b8c4d0;
+  --white:  #eff2f6;
+  --border: rgba(201,125,46,0.15);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--stone); color: var(--white);
+  font-family: 'Montserrat', sans-serif; min-height: 100vh;
+}
+
+#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.bg-atmo {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(74,96,128,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 70%, rgba(201,125,46,0.04) 0%, transparent 50%);
+}
+
+/* Page fade-in */
+.page-in {
+  position: fixed; inset: 0; background: var(--stone);
+  z-index: 50; pointer-events: none;
+  animation: pageIn 0.9s ease 0.1s forwards;
+}
+@keyframes pageIn { to { opacity: 0; visibility: hidden; } }
+
+/* ── Hero ── */
+.hero {
+  position: relative; z-index: 1;
+  text-align: center; padding: 6.5rem 2rem 1.5rem;
+  opacity: 0; animation: fadeUp 1s ease 0.7s forwards;
+}
+.eyebrow {
+  font-size: 0.57rem; font-weight: 600;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 1.8rem; display: block;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif; font-weight: 300;
+  font-size: clamp(3.4rem, 11vw, 6.8rem); line-height: 0.9;
+}
+.hero h1 em { font-style: italic; color: var(--flame); display: block; }
+.hero-rule {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, transparent, rgba(201,125,46,0.4), transparent);
+  margin: 2rem auto;
+}
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-weight: 300; font-size: 1.05rem; color: var(--mist);
+  line-height: 1.7; max-width: 380px; margin: 0 auto;
+}
+
+/* ── Wishes — step by step ── */
+.wishes {
+  position: relative; z-index: 1;
+  max-width: 640px; margin: 3.5rem auto 0;
+  padding: 0 2rem 1rem;
+}
+.wishes::before {
+  content: '';
+  position: absolute;
+  left: calc(2rem + 17px);
+  top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(201,125,46,0.18) 10%, rgba(201,125,46,0.18) 90%, transparent);
+}
+
+.wish {
+  display: flex; gap: 1.6rem; margin-bottom: 2.8rem;
+  opacity: 0; transform: translateX(-16px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+.wish.on { opacity: 1; transform: translateX(0); }
+
+.wish-dot {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid rgba(201,125,46,0.28); background: var(--panel);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; position: relative; z-index: 1;
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+.wish.on .wish-dot {
+  border-color: rgba(201,125,46,0.6);
+  box-shadow: 0 0 12px rgba(201,125,46,0.1);
+}
+
+.wish-body { padding-top: 0.25rem; flex: 1; }
+.wish-text {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-weight: 300; font-size: 1.05rem; color: var(--ash); line-height: 1.78;
+}
+.wish-text strong { font-style: normal; font-weight: 400; color: var(--white); }
+
+/* ── Video section ── */
+.vid-section {
+  position: relative; z-index: 1;
+  max-width: 640px; margin: 1.5rem auto 0; padding: 0 2rem;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.vid-section.on { opacity: 1; transform: translateY(0); }
+
+.divider {
+  display: flex; align-items: center; gap: 1.2rem; margin-bottom: 2.2rem;
+}
+.div-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, rgba(201,125,46,0.28), transparent); }
+.div-dot { width: 4px; height: 4px; background: var(--amber); opacity: 0.55; transform: rotate(45deg); flex-shrink: 0; }
+
+.vid-intro {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-weight: 300; font-size: 1.03rem; color: var(--mist);
+  line-height: 1.78; text-align: center; margin-bottom: 1.8rem;
+}
+.vid-intro strong { font-style: normal; color: var(--ash); font-weight: 400; }
+
+.vid-frame {
+  background: var(--panel); border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.vid-frame::before, .vid-frame::after {
+  content: ''; position: absolute;
+  width: 14px; height: 14px;
+  border-color: rgba(201,125,46,0.35); border-style: solid; z-index: 2;
+}
+.vid-frame::before { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
+.vid-frame::after  { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
+
+.vid-placeholder {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 1.2rem; padding: 3.5rem 2rem;
+}
+.play-ring {
+  width: 58px; height: 58px; border-radius: 50%;
+  border: 1px solid rgba(201,125,46,0.42);
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.play-ring::after {
+  content: ''; position: absolute; inset: -9px; border-radius: 50%;
+  border: 1px solid rgba(201,125,46,0.14);
+  animation: ringPulse 2.5s ease infinite;
+}
+.play-tri {
+  width: 0; height: 0; border-style: solid;
+  border-width: 8px 0 8px 15px;
+  border-color: transparent transparent transparent rgba(201,125,46,0.6);
+  margin-left: 3px;
+}
+.ph-label {
+  font-size: 0.56rem; font-weight: 600; letter-spacing: 0.28em;
+  text-transform: uppercase; color: var(--mist);
+}
+.ph-note {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.86rem; color: rgba(122,143,168,0.42);
+  max-width: 260px; line-height: 1.6; text-align: center;
+}
+.vid-frame video { width: 100%; display: block; }
+.vid-bar {
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--amber), transparent);
+  opacity: 0.38;
+}
+
+/* ── Final note ── */
+.final {
+  position: relative; z-index: 1;
+  max-width: 520px; margin: 4rem auto 0;
+  padding: 0 2rem 7rem; text-align: center;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s;
+}
+.final.on { opacity: 1; transform: translateY(0); }
+
+.final-text {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-weight: 300; font-size: 1.06rem; color: var(--mist);
+  line-height: 1.88; margin-bottom: 2rem;
+}
+.final-text strong { font-style: normal; font-weight: 400; color: var(--ash); }
+
+.closing {
+  font-family: 'Cormorant Garamond', serif; font-weight: 300;
+  font-size: 0.96rem; color: rgba(184,196,208,0.45);
+  line-height: 1.75; letter-spacing: 0.05em;
+  border-top: 1px solid rgba(201,125,46,0.1);
+  padding-top: 1.6rem;
+}
+.closing em { font-style: italic; color: rgba(201,125,46,0.55); }
+
+.sig {
+  display: block; margin-top: 2rem;
+  font-size: 0.54rem; font-weight: 600; letter-spacing: 0.36em;
+  text-transform: uppercase; color: rgba(201,125,46,0.4);
+}
+
+/* Progress */
+.progress {
+  position: fixed; bottom: 1.8rem; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 0.55rem; z-index: 20;
+}
+.dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(201,125,46,0.22); }
+.dot.on { background: var(--amber); }
+.dot-ln { width: 20px; height: 1px; background: rgba(201,125,46,0.18); }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes ringPulse { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(1.8);opacity:0} }
+
+@media (max-width: 480px) { .hero h1 { font-size: clamp(2.8rem,14vw,5rem); } }
+@media (prefers-reduced-motion: reduce) {
+  .wish,.vid-section,.final { opacity:1!important; transform:none!important; }
+  .page-in { animation: none!important; opacity:0!important; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-in"></div>
+<div class="bg-atmo"></div>
+<canvas id="particles"></canvas>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="eyebrow">Le Château de Tony &nbsp;·&nbsp; pour toi</span>
+  <h1>Joyeux<br/><em>Anniversaire,</em><br/>Tony.</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub">Tu as trouvé le chemin. Voici ce que je voulais te dire.</p>
+</div>
+
+<!-- WISHES -->
+<div class="wishes">
+
+  <div class="wish" data-delay="0">
+    <div class="wish-dot">🕯️</div>
+    <div class="wish-body">
+      <p class="wish-text">
+        Joyeux anniversaire, Anthony. Aujourd'hui c'est ton jour — et même si on ne peut pas le fêter ensemble, je voulais que tu saches que je pense à toi.
+      </p>
+    </div>
+  </div>
+
+  <div class="wish" data-delay="150">
+    <div class="wish-dot">✨</div>
+    <div class="wish-body">
+      <p class="wish-text">
+        Je te souhaite une année remplie de <strong>sérénité</strong>, de belles surprises, et de moments qui te font sourire sans raison précise.
+      </p>
+    </div>
+  </div>
+
+  <div class="wish" data-delay="300">
+    <div class="wish-dot">🌙</div>
+    <div class="wish-body">
+      <p class="wish-text">
+        Que cette année t'apporte tout ce que tu cherches — dans le travail, dans la vie, dans les petits détails du quotidien. Tu le mérites.
+      </p>
+    </div>
+  </div>
+
+  <div class="wish" data-delay="450">
+    <div class="wish-dot">🎂</div>
+    <div class="wish-body">
+      <p class="wish-text">
+        J'aurais aimé être là pour fêter ça avec toi — partager un gâteau, rire un peu, rendre cette journée encore plus spéciale. Puisque ce n'est pas possible, j'espère que cette petite surprise te fera sourire quand même.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- VIDEO -->
+<div class="vid-section" id="vidSection">
+  <div class="divider">
+    <div class="div-line"></div>
+    <div class="div-dot"></div>
+    <div class="div-line"></div>
+  </div>
+
+  <p class="vid-intro">
+    J'ai fait un petit <strong>montage vidéo</strong> pour toi.<br/>
+    J'espère que tu ne le trouveras pas trop bête —<br/>
+    ces moments m'ont rappelé à quel point c'était <strong>cool d'être avec toi</strong>.
+  </p>
+
+  <div class="vid-frame">
+    <!-- Placeholder visible jusqu'à ce que tu ajoutes ta vidéo -->
+    <div class="vid-placeholder" id="placeholder">
+      <div class="play-ring"><div class="play-tri"></div></div>
+      <p class="ph-label">Ta vidéo ici</p>
+      <p class="ph-note">
+        Dépose ton fichier .mp4 dans le dossier<br/>
+        et remplace <code style="color:rgba(201,125,46,0.7)">src="TA_VIDEO.mp4"</code>
+      </p>
+    </div>
+    <!--
+    <video controls preload="metadata">
+      <source src="TA_VIDEO.mp4" type="video/mp4" />
+    </video>
+    -->
+  </div>
+  <div class="vid-bar"></div>
+</div>
+
+<!-- FINAL NOTE -->
+<div class="final" id="finalNote">
+  <p class="final-text">
+    Ces moments ensemble m'ont rappelé combien<br/>
+    ta présence compte. J'aurais voulu qu'on puisse<br/>
+    <strong>fêter ça ensemble</strong> — peut-être une autre fois.
+  </p>
+  <p class="closing">
+    En attendant, sache que tu comptes pour moi —<br/>
+    <em>un peu plus que tu ne le crois, peut-être.</em>
+  </p>
+  <span class="sig">✦ &nbsp; Bonne année, Anthony &nbsp; ✦</span>
+</div>
+
+<!-- Progress dots -->
+<div class="progress">
+  <div class="dot on"></div>
+  <div class="dot-ln"></div>
+  <div class="dot on"></div>
+</div>
+
+<script>
+/* Particles */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+const pts = [];
+function mkP() {
+  return { x:Math.random()*(W||innerWidth), y:(H||innerHeight)+10,
+    r:Math.random()*1.2+0.25, vy:-(Math.random()*0.5+0.14), vx:(Math.random()-0.5)*0.24,
+    a:Math.random()*0.5+0.15, life:0, maxLife:Math.random()*330+200, ember:Math.random()>0.52 };
+}
+for(let i=0;i<55;i++){const p=mkP();p.y=Math.random()*innerHeight;p.life=Math.random()*p.maxLife;pts.push(p);}
+function drawP(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<pts.length;i++){
+    const p=pts[i];
+    p.x+=p.vx+Math.sin(p.life*0.018)*0.12; p.y+=p.vy; p.life++;
+    const alpha=p.a*Math.sin((p.life/p.maxLife)*Math.PI);
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    if(p.ember){ctx.fillStyle=`hsla(28,78%,63%,${alpha})`;ctx.shadowBlur=5;ctx.shadowColor=`hsla(28,78%,63%,${alpha*0.4})`;}
+    else{ctx.fillStyle=`hsla(210,26%,66%,${alpha*0.33})`;ctx.shadowBlur=0;}
+    ctx.fill(); ctx.shadowBlur=0;
+    if(p.life>=p.maxLife||p.y<-10) pts[i]=mkP();
+  }
+  requestAnimationFrame(drawP);
+}
+resize(); drawP();
+window.addEventListener('resize', resize);
+
+/* Scroll reveal — wishes */
+const wObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      const d = parseInt(e.target.dataset.delay)||0;
+      setTimeout(()=>e.target.classList.add('on'), d);
+      wObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.wish').forEach(el=>wObs.observe(el));
+
+/* Reveal video section */
+const vObs = new IntersectionObserver(([e])=>{
+  if(e.isIntersecting){e.target.classList.add('on');vObs.unobserve(e.target);}
+},{threshold:0.1});
+vObs.observe(document.getElementById('vidSection'));
+
+/* Reveal final note */
+const fObs = new IntersectionObserver(([e])=>{
+  if(e.isIntersecting){e.target.classList.add('on');fObs.unobserve(e.target);}
+},{threshold:0.2});
+fObs.observe(document.getElementById('finalNote'));
+</script>
+</body>
+</html>
