@@ -1,349 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>For you, with love</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pour toi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --ink:    #050810;
-      --deep:   #0a0f1e;
-      --navy:   #0d1635;
-      --gold:   #c8a84b;
-      --glow:   #e8c96a;
-      --silver: #a8b4cc;
-      --white:  #f0f4ff;
-      --warm:   #1a1228;
-    }
+:root {
+  --stone:  #0c0d10;
+  --deep:   #10121a;
+  --fog:    #1a1e2a;
+  --panel:  #13161f;
+  --amber:  #c97d2e;
+  --flame:  #e8a048;
+  --cold:   #4a6080;
+  --mist:   #7a8fa8;
+  --ash:    #b8c4d0;
+  --white:  #eff2f6;
+  --border: rgba(201,125,46,0.15);
+}
 
-    html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--stone);
+  color: var(--white);
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+}
 
-    body {
-      background: var(--ink);
-      color: var(--white);
-      font-family: 'Space Grotesk', sans-serif;
-      min-height: 100vh;
-    }
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
 
-    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+/* Atmospheric gradient */
+.bg-atmo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(74,96,128,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 20% 60%, rgba(201,125,46,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
 
-    /* ── Header ── */
-    .header {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 5rem 2rem 3rem;
-    }
+/* ── Header ── */
+.header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 6rem 2rem 2rem;
+}
 
-    .eyebrow {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-    }
+.eyebrow {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.6rem;
+}
 
-    .header h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.8rem, 9vw, 5.5rem);
-      font-weight: 800;
-      line-height: 1.0;
-    }
+.header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(3rem, 9vw, 5.8rem);
+  line-height: 0.95;
+  color: var(--white);
+}
 
-    .header h1 span {
-      color: var(--gold);
-    }
+.header h1 em {
+  font-style: italic;
+  color: var(--flame);
+}
 
-    .header .sub {
-      margin-top: 1.2rem;
-      color: var(--silver);
-      font-size: 1rem;
-      font-weight: 300;
-      line-height: 1.7;
-    }
+.header .sub {
+  margin-top: 1.4rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--mist);
+  font-weight: 300;
+  line-height: 1.7;
+}
 
-    /* ── Divider ── */
-    .divider {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      max-width: 520px;
-      margin: 0 auto 3.5rem;
-      padding: 0 2rem;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--gold), transparent);
-      opacity: 0.4;
-    }
-    .divider-star { color: var(--gold); font-size: 0.9rem; }
+/* ── Rule ── */
+.rule-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  max-width: 480px;
+  margin: 2.8rem auto;
+  padding: 0 2rem;
+}
+.rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201,125,46,0.35), transparent);
+}
+.rule-diamond {
+  width: 5px;
+  height: 5px;
+  background: var(--amber);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  opacity: 0.7;
+}
 
-    /* ── Cards grid ── */
-    .cards {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
+/* ── Cards ── */
+.cards {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.2rem;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
 
-    .card {
-      background: rgba(13,22,53,0.6);
-      border: 1px solid rgba(200,168,75,0.18);
-      border-radius: 4px;
-      padding: 2rem 1.8rem;
-      backdrop-filter: blur(8px);
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease, border-color 0.3s;
-    }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 2.2rem 2rem;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease, border-color 0.3s;
+  position: relative;
+  overflow: hidden;
+}
 
-    .card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px;
+  height: 0;
+  background: linear-gradient(to bottom, var(--amber), transparent);
+  transition: height 0.4s ease;
+}
 
-    .card:hover {
-      border-color: rgba(200,168,75,0.45);
-    }
+.card:hover::before { height: 100%; }
+.card:hover { border-color: rgba(201,125,46,0.32); }
 
-    .card-icon {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-    .card h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-    }
+.card-num {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  opacity: 0.7;
+  margin-bottom: 1.2rem;
+}
 
-    .card p {
-      font-size: 0.95rem;
-      font-weight: 300;
-      color: var(--silver);
-      line-height: 1.75;
-    }
+.card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 1.2rem;
+  color: var(--ash);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
 
-    /* ── Big quote ── */
-    .quote-wrap {
-      position: relative;
-      z-index: 1;
-      max-width: 680px;
-      margin: 4.5rem auto 0;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
+.card p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1rem;
+  color: var(--mist);
+  line-height: 1.8;
+}
 
-    blockquote {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: clamp(1.25rem, 3.5vw, 1.65rem);
-      line-height: 1.65;
-      color: var(--white);
-      opacity: 0;
-      transition: opacity 1s ease 0.3s;
-    }
+/* ── Quote block ── */
+.quote-section {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  margin: 5rem auto 0;
+  padding: 0 2rem;
+  text-align: center;
+}
 
-    blockquote.visible { opacity: 1; }
+.quote-mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 6rem;
+  line-height: 0.3;
+  color: var(--amber);
+  opacity: 0.25;
+  display: block;
+  margin-bottom: 1.8rem;
+}
 
-    blockquote::before {
-      content: '"';
-      display: block;
-      font-size: 5rem;
-      line-height: 0.4;
-      color: var(--gold);
-      opacity: 0.5;
-      margin-bottom: 1.5rem;
-    }
+blockquote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  line-height: 1.7;
+  color: var(--ash);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
 
-    /* ── Bottom CTA ── */
-    .bottom {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 4rem 2rem 5rem;
-    }
+blockquote.visible { opacity: 1; }
 
-    .hint-line {
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      color: var(--silver);
-      opacity: 0.6;
-      margin-bottom: 1.8rem;
-      text-transform: uppercase;
-    }
+/* ── Bottom CTA ── */
+.bottom {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 5rem 2rem 6rem;
+}
 
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: var(--gold);
-      color: var(--ink);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 1.1rem 2.6rem;
-      cursor: pointer;
-      text-decoration: none;
-      border-radius: 2px;
-      transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
-      border: none;
-    }
+.page-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cold);
+  margin-bottom: 2.2rem;
+  display: block;
+}
 
-    .cta:hover {
-      background: var(--glow);
-      box-shadow: 0 0 35px rgba(200,168,75,0.45);
-      transform: translateY(-2px);
-    }
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ash);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(184,196,208,0.3);
+  padding-bottom: 0.4rem;
+  transition: color 0.3s, border-color 0.3s;
+}
+.cta:hover { color: var(--flame); border-color: var(--flame); }
+.cta:hover .arrow { transform: translateX(6px); }
+.cta .arrow { transition: transform 0.3s; }
 
-    .cta .arrow { transition: transform 0.3s; }
-    .cta:hover .arrow { transform: translateX(5px); }
+/* ── Progress dots ── */
+.progress {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 10;
+}
+.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(201,125,46,0.25);
+}
+.dot.active { background: var(--amber); }
+.dot-line {
+  width: 24px; height: 1px;
+  background: rgba(201,125,46,0.2);
+}
 
-    /* ── Progress ── */
-    .progress {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 0.5rem;
-      z-index: 10;
-    }
-    .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(200,168,75,0.3);
-    }
-    .dot.active { background: var(--gold); }
-
-    @media (prefers-reduced-motion: reduce) {
-      .card, blockquote { opacity: 1 !important; transform: none !important; }
-    }
-  </style>
+@media (prefers-reduced-motion: reduce) {
+  .card, blockquote { opacity: 1 !important; transform: none !important; }
+}
+</style>
 </head>
 <body>
 
-<canvas id="stars"></canvas>
+<div class="bg-atmo"></div>
+<canvas id="particles"></canvas>
 
 <div class="header">
-  <p class="eyebrow">A birthday tribute</p>
-  <h1>Here's to<br/><span>you,</span> builder.</h1>
-  <p class="sub">The one who turns ideas into reality — and makes mine feel possible too.</p>
+  <p class="eyebrow">II &nbsp;·&nbsp; ce que j'aime en toi</p>
+  <h1>Calme.<br/><em>Doux. Présent.</em></h1>
+  <p class="sub">Les choses que les mots n'arrivent pas toujours à dire.</p>
 </div>
 
-<div class="divider"><span class="divider-star">✦</span></div>
+<div class="rule-wrap">
+  <div class="rule-line"></div>
+  <div class="rule-diamond"></div>
+  <div class="rule-line"></div>
+</div>
 
 <div class="cards">
 
   <div class="card">
-    <span class="card-icon">🧠</span>
-    <h3>For the mind that never stops</h3>
-    <p>You see problems as puzzles, bugs as mysteries, and every blank file as a world that hasn't been built yet. That relentless curiosity is one of the things I love most about you.</p>
+    <p class="card-num">01</p>
+    <h3>Son calme</h3>
+    <p>Il n'élève jamais la voix. Il y a quelque chose de rare dans cette façon d'être — stable, même quand tout ne l'est pas.</p>
   </div>
 
   <div class="card">
-    <span class="card-icon">🛠️</span>
-    <h3>For the hands that create</h3>
-    <p>You build things that exist only because you decided they should. From zero to something real — that kind of quiet power is rare, and I get to watch you do it all the time.</p>
+    <p class="card-num">02</p>
+    <h3>Sa douceur</h3>
+    <p>Ce n'est pas dans les grands gestes. C'est dans les petites choses, dans la façon dont il est attentif sans qu'on le lui demande.</p>
   </div>
 
   <div class="card">
-    <span class="card-icon">🌙</span>
-    <h3>For the patience you carry</h3>
-    <p>You debug at midnight without losing your calm. You explain things twice without losing your kindness. That steadiness is my safe place.</p>
+    <p class="card-num">03</p>
+    <h3>Sa patience</h3>
+    <p>Il prend le temps. Il ne précipite rien. Être à côté de lui, c'est avoir l'impression que le monde ralentit un peu.</p>
   </div>
 
   <div class="card">
-    <span class="card-icon">✨</span>
-    <h3>For everything you are</h3>
-    <p>Smart. Warm. Funny in the quietest way. You're the kind of person who makes the room better just by being in it — and I'm the lucky one who gets to call you mine.</p>
+    <p class="card-num">04</p>
+    <h3>Sa présence</h3>
+    <p>Quand il est là, vraiment là — c'est une chaleur qu'on ne sait pas toujours nommer, mais qu'on ressent immédiatement.</p>
   </div>
 
 </div>
 
-<div class="quote-wrap">
+<div class="quote-section">
+  <span class="quote-mark">"</span>
   <blockquote id="bq">
-    The world is made of code and chaos,<br/>
-    and you've made your own little corner of it<br/>
-    beautiful, deliberate, and yours.<br/>
-    Happy birthday.
+    La distance ne change pas qui il est —<br/>
+    elle révèle simplement combien sa présence<br/>
+    compte, quand elle est là.
   </blockquote>
 </div>
 
 <div class="bottom">
-  <p class="hint-line">One more stop &nbsp;·&nbsp; the best part is next</p>
+  <span class="page-label">La suite — le dernier arrêt</span>
   <a class="cta" href="page3.html">
-    Keep going <span class="arrow">→</span>
+    Continuer <span class="arrow">→</span>
   </a>
 </div>
 
 <div class="progress">
   <div class="dot"></div>
+  <div class="dot-line"></div>
   <div class="dot active"></div>
+  <div class="dot-line"></div>
   <div class="dot"></div>
 </div>
 
 <script>
-  // Starfield
-  const canvas = document.getElementById('stars');
-  const ctx = canvas.getContext('2d');
-  let W, H, stars = [];
+// Particle system (same embers + dust)
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-  function seed() {
-    stars = Array.from({ length: 180 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 1.2 + 0.2,
-      a: Math.random(), da: (Math.random() * 0.003 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
-    }));
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    for (const s of stars) {
-      s.a = Math.max(0.08, Math.min(1, s.a + s.da));
-      if (s.a <= 0.08 || s.a >= 1) s.da *= -1;
-      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(232,201,106,${s.a * 0.75})`; ctx.fill();
+const particles = [];
+function createParticle() {
+  return {
+    x: Math.random() * (W || window.innerWidth),
+    y: (H || window.innerHeight) + 10,
+    r: Math.random() * 1.2 + 0.3,
+    vy: -(Math.random() * 0.5 + 0.15),
+    vx: (Math.random() - 0.5) * 0.25,
+    a: Math.random() * 0.5 + 0.15,
+    life: 0,
+    maxLife: Math.random() * 350 + 200,
+    ember: Math.random() > 0.6,
+  };
+}
+
+for (let i = 0; i < 50; i++) {
+  const p = createParticle();
+  p.y = Math.random() * window.innerHeight;
+  p.life = Math.random() * p.maxLife;
+  particles.push(p);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    p.x += p.vx + Math.sin(p.life * 0.018) * 0.12;
+    p.y += p.vy;
+    p.life++;
+    const prog = p.life / p.maxLife;
+    const alpha = p.a * Math.sin(prog * Math.PI);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    if (p.ember) {
+      ctx.fillStyle = `hsla(28, 75%, 62%, ${alpha})`;
+      ctx.shadowBlur = 5;
+      ctx.shadowColor = `hsla(28, 75%, 62%, ${alpha * 0.4})`;
+    } else {
+      ctx.fillStyle = `hsla(210, 25%, 65%, ${alpha * 0.35})`;
+      ctx.shadowBlur = 0;
     }
-    requestAnimationFrame(draw);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    if (p.life >= p.maxLife || p.y < -10) particles[i] = createParticle();
   }
-  resize(); seed(); draw();
-  window.addEventListener('resize', () => { resize(); seed(); });
+  requestAnimationFrame(draw);
+}
 
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 120);
-      }
-    });
-  }, { threshold: 0.15 });
+resize();
+draw();
+window.addEventListener('resize', resize);
 
-  document.querySelectorAll('.card').forEach(c => observer.observe(c));
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 130);
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.card').forEach(c => obs.observe(c));
 
-  const bq = document.getElementById('bq');
-  const bqObs = new IntersectionObserver(([e]) => {
-    if (e.isIntersecting) bq.classList.add('visible');
-  }, { threshold: 0.4 });
-  bqObs.observe(bq);
+const bqObs = new IntersectionObserver(([e]) => {
+  if (e.isIntersecting) document.getElementById('bq').classList.add('visible');
+}, { threshold: 0.3 });
+bqObs.observe(document.getElementById('bq'));
 </script>
 </body>
 </html>
